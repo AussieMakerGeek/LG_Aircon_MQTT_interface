@@ -28,7 +28,7 @@ The Signal line from the AC has an extremely weak pullup on it - The current req
 
 The LED also gives you a good indication of when data is being transmitted from the controller (I have not implemented an Rx LED).
 
-![alt text}(Circuit diagram_bb.png "Circuit diagram")
+![alt text](Circuit diagram_bb.png "Circuit diagram")
 
 
 ## Usage
