@@ -1,7 +1,8 @@
 # LG Ducted split control via Arduino with MQTT
 DISCLAIMER - This is a code implementation and interface for connecting to an LG airconditioner.  This is a 'hack' and does not use any authorised or otherwise non potentially warranty voiding techniques. Having said that, I have been using this system for quite some time and have not run in to any damaging issues but there are some caveats to heed (see below).  This information is provided as-is without any warranty or claim that it will work as expected or not damage your system.  It is simply a recount of the techniques I used to accomplish the task that I am sharing for the greater good. No liability accepted.
 
-This is not another Infrared remote control emulation hack. My particular AC has no usable interface designed for any sort of control other than the included wall mounted controls. Unfortunately it was made at a time where IoT was not high on any manufacturers list. I discovered it had some options for 'master' control but even though the unit was only 2 years old at the time of me first attempting this, the expansion boards were unobtanium and prices were astronomical anyway. As was the 'Wireless RF Remote' addon which could have made things a lot easier but impossible to buy.
+##This is not another Infrared remote control emulation hack!
+My particular AC has no usable interface designed for any sort of control other than the included wall mounted controls. Unfortunately it was made at a time where IoT was not high on any manufacturers list. I discovered it had some options for 'master' control but even though the unit was only 2 years old at the time of me first attempting this, the expansion boards were unobtanium and prices were astronomical anyway. As was the 'Wireless RF Remote' addon which could have made things a lot easier but impossible to buy.
 
 Had it been my choice, it would not be an LG but since it was installed in the house when I purchased it (and it's replacement cost would likely be in excess of $10k) it's what I had to deal with.
 
@@ -11,12 +12,14 @@ These controllers are based on a half duplex (single wire) two way serial commun
 
 The code is based on using an Arduino Uno with Wiznet shield.  There is no reason that this could not be done via serial with a Pro mini etc but it will not work with an ESP8266 as is.  The ESP8266 will not allow for serial speeds low enough.  However, it is possible that you could use a pro mini for the AC interface and i2C to an ESP8266 to still make it wireless. I would strongly recommend NOT using the 12v supply from the controller connector to power any of this interface, it is designed for low current and the power supply in the main unit is unlikely able to cope with the current required.
 
-Caveats:
+##Caveats
 YMMV if you do not have an identical system to mine.
+
 This interface gives you the ability to control the system in a way that is not as intended, i.e it allows you to change the zone dampers, fan speed and mode without the system being on. I have discovered that if you do change the zones when the main power is off, it sets some sort of error where ALL dampers seem to be half open and half closed. The only way to reset this is to power cycle the entire AC system (at the main isolator/fuse).  It's not damaging, just annoying.
+
 This is a single wire bus, used for both Tx and Rx.  There does not seem to be a method that the controllers use to negotiate or otherwise 'time' sending data (or at least I have not found it). The components (wall controllers and main unit) do seem to send updates at regular intervals though and the controllers will error if they do not receive data for a while. The code tries to predict a time window to transmit the data to prevent collisions. It is not perfect and sometimes commands may have to be retried to be successful due to collisions on the bus.
 
-Connections:
+##Connections
 The physical RX interface utilises a logic level converter to bring the 12v signal down to something the Arduino is ok with.
 For the TX, we simply use an opto-isolator, LED and current limiting resistor to be able to pull the data line low.  It sounds technical but it's really straight forward.
 The Signal line from the AC has an extremely weak pullup on it - The current required to pull it low is very small.
@@ -26,7 +29,7 @@ The LED also gives you a good indication of when data is being transmitted from 
 <Todo: Arduino Interface Pic>
 
 
-Usage:
+##Usage
 The system is designed to publish and process information posted to a particular MQTT Topic.  Since I have many modules for other things on my system, I use a 4 character module ID, based on the MAC address it is using.
 By default, it will use Topics:
 ha/mod/5557/<feature> <Value>
