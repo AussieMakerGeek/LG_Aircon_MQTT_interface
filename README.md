@@ -31,15 +31,16 @@ The system is designed to publish and process information posted to a particular
 By default, it will use Topics:
 ha/mod/5557/<feature> <Value>
 
-Feature	Function	Possible values
-P		Power		0=off/1=on
-F		Fan			0=low/1=Med/2=High
-M		Mode		0=Cool/1=Dehumidify/2=Fan/3=Auto/4=Heat
-Z		Zones		Binary representation of the 4 zones as a string, ie 1011
-T		Temp		18-30
+Feature|Function|Possible values
+-------|--------|---------------
+P|Power|0=off/1=on
+F|Fan|0=low/1=Med/2=High
+M|Mode|0=Cool/1=Dehumidify/2=Fan/3=Auto/4=Heat
+Z|Zones|Binary representation of the 4 zones as a string, ie 1011
+T|Temp|18-30
 
 If is then up to you to implement these in your home automation system but if you are using OpenHAB like me, then this should help:
-
+```
 Items:
 Switch AC_Power { mqtt=">[control:ha/mod/5557/P:command:ON:1],>[control:ha/mod/5557/P:command:OFF:0],<[control:ha/mod/5557/P:state:MAP(simpleBinary.map)],<[control:ha/mod/5557/P:state:MAP(simpleBinary.map)]" }
 Number AC_Mode  <climate>       { mqtt=">[control:ha/mod/5557/M:command:*:default],<[control:ha/mod/5557/M:state:default]" }
@@ -133,3 +134,4 @@ then
        AC_Zone.sendCommand(zoneSwitchState)
      }
 end
+```
